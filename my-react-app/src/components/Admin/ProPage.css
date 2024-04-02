@@ -1,0 +1,72 @@
+/* ProPage.css */
+
+.profile-container {
+  display: flex;
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.left-column {
+  flex: 1;
+}
+
+.right-column {
+  flex: 1;
+  padding-left: 20px;
+}
+
+/* ProPage.css */
+
+.profile-picture-container {
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  margin-top: 10px;
+  border-radius: 50%;
+}
+
+.default-profile-picture-label {
+  display: block;
+  cursor: pointer;
+}
+
+.default-profile-picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure the image covers the container while maintaining its aspect ratio */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+
+.profile-details {
+  color: #6c757d; /* Bootstrap text-muted color */
+}
+
+.section-header {
+  color: #495057; /* Bootstrap text-secondary color */
+  margin-top: 20px;
+}
+
+.btn-primary {
+  color: #fff !important;
+  background-color: #007bff !important;
+  border-color: #007bff !important;
+}
+
+.btn-secondary {
+  color: #fff !important;
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+}

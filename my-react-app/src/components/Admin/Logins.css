@@ -1,0 +1,120 @@
+/* Logins.css */
+.login-page-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-top: 50px;
+}
+
+.login-form-container,
+.forgot-password-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 500px; /* Adjust the width as needed */
+  margin-bottom: 100px;
+  padding: 40px;
+  margin-top: 100px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #c2cacd, #e6f0f4);
+  box-shadow:  10px 10px 14px #818689,
+               -10px -10px 14px #ffffff;
+}
+
+.login-message,
+.admin-login-message,
+.forgot-password-message {
+  margin-top: 10px;
+}
+
+label {
+  margin-bottom: 8px;
+}
+
+select,
+input {
+  margin-bottom: 16px;
+  padding: 8px;
+}
+
+.login-button,
+.button {
+  position: relative;
+  overflow: hidden;
+  height: 3rem;
+  padding: 0 2rem;
+  border-radius: 1.5rem;
+  background: #3d3a4e;
+  background-size: 400%;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-button:hover::before,
+.button:hover::before {
+  transform: scaleX(1);
+}
+
+.button-content {
+  position: relative;
+  z-index: 1;
+}
+
+.spinner {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  border: 4.5px solid #0000;
+  border-radius: 50%;
+  border-color: #dbdcef #0000;
+  animation: spinner-e04l1k 2s infinite linear;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.spinner::before,
+.spinner::after {
+  content: "";
+  grid-area: 1/1;
+  margin: 2.2px;
+  border: inherit;
+  border-radius: 50%;
+}
+
+.spinner::before {
+  border-color: #474bff #0000;
+  animation: inherit;
+  animation-duration: 1s;
+  animation-direction: reverse;
+}
+
+.spinner::after {
+  margin: 8.9px;
+}
+
+.forgot-password-button,
+.go-to-home-button {
+  background-color: #3d3a4e;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.forgot-password-button:hover,
+.go-to-home-button:hover {
+  background-color: #2c293b; /* Adjust the color on hover as needed */
+}
+
+@keyframes spinner-e04l1k {
+  100% {
+    transform: rotate(1turn);
+  }
+}

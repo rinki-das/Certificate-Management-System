@@ -1,0 +1,43 @@
+.forget-pass-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 50px;
+}
+
+.forget-pass-container h2 {
+  text-align: center;
+}
+
+.forget-pass-container div {
+  margin-bottom: 15px;
+}
+
+.forget-pass-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.forget-pass-container input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.forget-pass-container button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.forget-pass-message {
+  margin-top: 15px;
+  text-align: center;
+  color: #4caf50;
+}

@@ -1,0 +1,76 @@
+/* NotificationsPage.css */
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+
+.notification-container {
+  max-width: 1400px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h1 {
+  color: #333;
+  margin: 0;
+}
+
+.notification-icons {
+  display: flex;
+  align-items: center;
+}
+
+.notification-icon,
+.refresh-icon {
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.notification-list {
+  margin-top: 20px;
+}
+
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.notification-content {
+  flex-grow: 1;
+}
+
+.delete-button {
+  padding: 5px;
+  color: #ff5858;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin-right: 80px;
+}
+
+
+.no-notifications {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}

@@ -1,0 +1,32 @@
+/* Add this CSS to your existing styles or create a new CSS file for card content */
+
+/* Card Content Styles */
+.card-content {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff; /* Adjust background color as needed */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  }
+  
+  #calendarScheduleContent {
+    /* Additional styles for the specific card content */
+  }
+  
+  /* Customize the styles based on your design */
+  h2 {
+    color: #262626;
+    font-size: 1.5em;
+    line-height: normal;
+    font-weight: 700;
+    margin-bottom: 0.5em;
+  }
+  
+  p {
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1.5em;
+    color: #452c2c;
+  }
+  
+  /* Add more styles as needed */
+  

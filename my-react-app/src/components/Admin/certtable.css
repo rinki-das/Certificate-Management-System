@@ -1,0 +1,85 @@
+/* CertTable.css */
+
+.cert-table-container {
+    margin: 20px;
+  }
+  h6{
+    font-size: 20px;
+    text-align: center;
+    margin-top: 70px;
+    margin-bottom: 90px;
+  }
+  
+  .cert-form-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 700px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cert-form-container label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .cert-form-container input {
+    margin-bottom: 16px;
+    padding: 8px;
+    width: 100%;
+  }
+  
+  .cert-form-container button {
+    padding: 10px 15px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .cert-form-container button:hover {
+    background-color: #45a049;
+  }
+  
+  .cert-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .cert-table th,
+  .cert-table td {
+    border: 1px solid #dddddd;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .cert-table th {
+    background-color: #366da5;
+  }
+  
+  .cert-table input {
+    width: 100%;
+    padding: 8px;
+  }
+  
+  .cert-table button {
+    cursor: pointer;
+    padding: 8px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+  }
+  
+  .cert-table button:hover {
+    background-color: #45a049;
+  }
+  
+  
+  
+  
