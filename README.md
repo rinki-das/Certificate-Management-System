@@ -1,5 +1,8 @@
 ﻿# Certificate-Management-System
 
+
+Download the node modules for the full project
+with command: npm install
 ![image](https://github.com/rinki-das/Certificate-Management-System/assets/101658911/ab6de141-137f-4561-a35a-aca8f821f0c3)
 ![image](https://github.com/rinki-das/Certificate-Management-System/assets/101658911/be12895e-c6c0-4fd8-93da-51e74c74827c)
 ![image](https://github.com/rinki-das/Certificate-Management-System/assets/101658911/6ca014e9-9731-4a41-bd03-5d2b2841c57b)
