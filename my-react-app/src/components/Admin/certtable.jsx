@@ -230,3 +230,4 @@ const CertTable = () => {
 };
 
 export default CertTable;
+

@@ -96,7 +96,42 @@ app.get('/lastMobcode', async (req, res) => {
       await client.close();
     }
   }
+
 });
+
+// Route to fetch all courses with names and codes
+app.get('/api/courses', async (req, res) => {
+  let client; // Declare the client variable
+
+  try {
+    // Create a new MongoClient instance
+    client = new MongoClient(mongoURL, { useUnifiedTopology: true });
+
+    // Connect to the MongoDB server
+    await client.connect();
+
+    // Access the database and collection
+    const db = client.db(dbName);
+    const courseCollection = db.collection('course_master');
+
+    // Fetch all courses from the collection
+    const courses = await courseCollection.find({}, { projection: { _id: 0 } }).toArray();
+
+    // Send the courses as JSON response
+    res.json(courses);
+  } catch (error) {
+    // Handle any errors
+    console.error('Error fetching courses:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  } finally {
+    // Close the MongoDB client connection
+    if (client) {
+      await client.close();
+    }
+  }
+});
+
+
 
 // Add Institute route
 app.post('/addInstitute', async (req, res) => {
@@ -105,7 +140,91 @@ app.post('/addInstitute', async (req, res) => {
     client = new MongoClient(mongoURL, { useUnifiedTopology: true });
     await client.connect();
     const db = client.db(dbName);
-    const { instituteCode, ownerName, organisationName, mobileNumber, altMobileNumber, email, address, postOffice, policeStation, district, distCode, pinCode, gender } = req.body;
+    const { ownerName, organisationName, mobileNumber, altMobileNumber, email, address, postOffice, policeStation, district, distCode, pinCode, selectedCourses } = req.body;
+
+    // Fetch the last mobcode to determine the next mobcode
+    const lastMobcode = await getLastMobcode(db);
+
+    // Increment the last mobcode by 1
+    const nextMobcode = lastMobcode + 1;
+
+    // Store the institute details with the next mobcode
+    const instituteResult = await db.collection(instituteDetailsCollection).insertOne({
+      mobcode: nextMobcode.toString(), // Convert back to string before storing
+      owner_name: ownerName,
+      orgname: organisationName,
+      mobile_number: mobileNumber,
+      alt_mobile_num: altMobileNumber,
+      email: email,
+      address: address,
+      po: postOffice,
+      ps: policeStation,
+      dist_code: distCode,
+      district_name: district,
+      pin_code: pinCode,
+    });
+
+    // Add course information for the institute with the same mobcode
+    const courseResult = await db.collection(instituteCourseCollection).insertMany(selectedCourses.map(courseCode => ({
+      mobcode: nextMobcode.toString(),
+      course_code: courseCode,
+      Reg_By_UserID: 'user', // Assuming this is a hardcoded value for now
+      Register_Time: new Date().toISOString(), // Use current time as registration time
+    })));
+
+    res.status(200).json({ success: true, message: 'Institute details and course information added successfully!' });
+  } catch (error) {
+    console.error('Error adding institute details:', error);
+    res.status(500).json({ success: false, message: 'Failed to add institute details and course information. Please try again.' });
+  } finally {
+    if (client) {
+      await client.close();
+    }
+  }
+});
+
+
+
+const instituteCourseCollection = 'Institute_course_master';
+// Add Institute course route
+app.post('/addInstituteCourse', async (req, res) => {
+  let client;
+  try {
+    client = new MongoClient(mongoURL, { useUnifiedTopology: true });
+    await client.connect();
+    const db = client.db(dbName);
+    const { mobcode, courseCode, Reg_By_UserID, Register_Time } = req.body;
+
+    // Store the course information for the institute
+    await db.collection(instituteCourseCollection).insertOne({
+      mobcode: mobcode,
+      course_code: courseCode,
+      Reg_By_UserID: Reg_By_UserID,
+      Register_Time: Register_Time,
+    });
+
+    res.status(200).json({ success: true, message: 'Course information added successfully!' });
+  } catch (error) {
+    console.error('Error adding course information:', error);
+    res.status(500).json({ success: false, message: 'Failed to add course information. Please try again.' });
+  } finally {
+    if (client) {
+      await client.close();
+    }
+  }
+});
+
+
+
+
+// Add Institute and Course route
+app.post('/addInstituteAndCourse', async (req, res) => {
+  let client;
+  try {
+    client = new MongoClient(mongoURL, { useUnifiedTopology: true });
+    await client.connect();
+    const db = client.db(dbName);
+    const { ownerName, organisationName, mobileNumber, altMobileNumber, email, address, postOffice, policeStation, district, distCode, pinCode, selectedCourses } = req.body;
 
     // Fetch the last mobcode to determine the next mobcode
     const lastMobcode = await getLastMobcode(db);
@@ -129,10 +248,20 @@ app.post('/addInstitute', async (req, res) => {
       pin_code: pinCode,
     });
 
-    res.status(200).json({ success: true, message: 'Institute details added successfully!' });
+    // Insert course information for the institute
+    const coursesInsertionResult = await Promise.all(selectedCourses.map(courseCode => {
+      return db.collection(instituteCourseMasterCollection).insertOne({
+        mobcode: nextMobcode.toString(),
+        course_code: courseCode,
+        Reg_By_UserID: 'user', // Assuming this is a hardcoded value for now
+        Register_Time: new Date().toISOString(), // Use current time as registration time
+      });
+    }));
+
+    res.status(200).json({ success: true, message: 'Institute details and courses added successfully!' });
   } catch (error) {
-    console.error('Error adding institute details:', error);
-    res.status(500).json({ success: false, message: 'Failed to add institute details. Please try again.' });
+    console.error('Error adding institute details and courses:', error);
+    res.status(500).json({ success: false, message: 'Failed to add institute details and courses. Please try again.' });
   } finally {
     if (client) {
       await client.close();
@@ -759,7 +888,7 @@ app.get('/getStudentDetails', async (req, res) => {
         grade: 1,
         percent_of_marks: 1,
         certificate_no: 1, // Include certificate_number in the result
-        aadhaar: 1, // Include Aadhaar number
+        aadhar: 1, // Include Aadhaar number
         father_name: 1, // Include father's name
         mother_name: 1, // Include mother's name
       })
@@ -856,7 +985,7 @@ app.post('/upload-excel', upload.single('excelFile'), async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded.' });
     }
-    const { mobcode, dist_code, batchcode, startDate, endDate, course_code, courseName } = req.body;
+    const { mobcode, dist_code, batchcode, startDate, endDate, course_code, courseName, examDate } = req.body; // Extract examDate from request body
 
     const fileBuffer = req.file.buffer;
     const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
@@ -910,6 +1039,7 @@ app.post('/upload-excel', upload.single('excelFile'), async (req, res) => {
         batchcode,
         startDate,
         endDate,
+        examDate, // Include examDate in the student details
         reg_no,
         student_name: row.student_name,
         father_name: row.father_name,
@@ -917,7 +1047,7 @@ app.post('/upload-excel', upload.single('excelFile'), async (req, res) => {
         dob: formatDate(row.dob), // Format the Excel date
         category: row.category,
         gender: row.gender,
-        aadhar: row.aadhar,
+        aadhar: row.aadhar.toString(),
         phone: row.phone,
         email: row.email,
         address: row.address,
@@ -951,7 +1081,34 @@ app.post('/upload-excel', upload.single('excelFile'), async (req, res) => {
     console.error('Error uploading and processing Excel file:', error);
     res.status(500).json({ message: 'Internal server error.' });
   }
-}); 
+});
+
+
+// API endpoint to fetch only course information (course code and exam date) based on the batch code
+app.get('/getCourseInfo', async (req, res) => {
+  try {
+    const { batchCode } = req.query;
+
+    // Connect to MongoDB
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+    const db = client.db(dbName);
+
+    // Collection name
+    const collection = db.collection('Student_Details');
+
+    // Fetch only course information
+    const courseInfo = await collection.findOne({ batchcode: batchCode }, { projection: { course_code: 1, examDate: 1 } });
+
+    // Close the MongoDB connection
+    await client.close();
+
+    res.json(courseInfo);
+  } catch (error) {
+    console.error('Error fetching course info:', error);
+    res.status(500).json({ error: 'Error fetching course info' });
+  }
+});
 
 
 app.post('/generate-batch-code', async (req, res) => {

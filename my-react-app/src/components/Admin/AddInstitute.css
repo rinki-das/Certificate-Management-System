@@ -1,75 +1,100 @@
 /* AddInstitute.css */
 
 .image-container {
-    margin-bottom: 20px;
-  }
-  
-  .institute-form-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff
-    
-    
-  }
-  
-  .institute-form {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-  }
-  
-  .form-group {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-  }
-  
-  .input-box {
-    flex: 1;
-    margin-right: 15px;
-  }
-  
-  .column {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input,
-  select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  button {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  /* Optional: Add styling for form validation error messages */
-  .alert {
-    color: #ff0000;
-    margin-bottom: 10px;
-  }
-  
+  margin-bottom: 20px;
+}
+
+.institute-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.institute-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.input-box {
+  flex: 1;
+  margin-right: 15px;
+}
+
+.column {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Optional: Add styling for form validation error messages */
+.alert {
+  color: #ff0000;
+  margin-bottom: 10px;
+}
+
+/* Add CSS for selected courses */
+.selected-courses {
+  list-style-type: none;
+  padding: 0;
+}
+
+.selected-courses li {
+  display: flex;
+  align-items: center; /* Align items vertically in the middle */
+  margin-bottom: 5px; /* Adjust as needed */
+}
+
+.selected-courses li button {
+  margin-left: 160px;
+  margin-top: 20px; 
+  /* Add space between course name and button */
+  background: none;
+  border: none;
+  color: red;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.selected-courses li button:hover {
+  color: darkred;
+}

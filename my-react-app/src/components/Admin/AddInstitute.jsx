@@ -4,8 +4,9 @@ import './AddInstitute.css';
 
 const InstituteForm = () => {
   const [districts, setDistricts] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [formData, setFormData] = useState({
-    instituteCode: '', // Initialize with an empty string
+    instituteCode: '', 
     ownerName: '',
     organisationName: '',
     mobileNumber: '',
@@ -15,27 +16,24 @@ const InstituteForm = () => {
     postOffice: '',
     policeStation: '',
     district: '',
-    distCode: '', // Added distCode field
+    distCode: '',
     pinCode: '',
+    selectedCourses: [], // Store selected courses as an array
   });
 
   const [districtList, setDistrictList] = useState([]);
   const [lastMobcode, setLastMobcode] = useState(0);
 
   const handleChange = (e) => {
-    let value = e.target.value;
+    const { name, value } = e.target;
+    let newValue = value;
 
-    if (
-      e.target.name === 'instituteCode' ||
-      e.target.name === 'mobileNumber' ||
-      e.target.name === 'altMobileNumber' ||
-      e.target.name === 'pinCode'
-    ) {
-      value = value.replace(/\D/g, '');
+    if (name === 'instituteCode' || name === 'mobileNumber' || name === 'altMobileNumber' || name === 'pinCode') {
+      newValue = newValue.replace(/\D/g, '');
     }
 
-    // For the district dropdown
-    if (e.target.name === 'district') {
+     // For the district dropdown
+     if (e.target.name === 'district') {
       const [districtName, distCode] = value.split(' - ');
       setFormData({
         ...formData,
@@ -50,27 +48,57 @@ const InstituteForm = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleCourseSelect = (e) => {
+    const { value } = e.target;
 
-    if (Object.values(formData).some((value) => value === '')) {
-      alert('Please fill in all fields before submitting.');
+    if (formData.selectedCourses.includes(value)) {
+      // If the course is already selected, do nothing
       return;
     }
 
+    const selectedCourse = courses.find(course => course.course_code === value);
+
+    if (selectedCourse) {
+      setFormData(prevState => ({
+        ...prevState,
+        selectedCourses: [...prevState.selectedCourses, selectedCourse.course_code],
+      }));
+    }
+  };
+
+  const handleRemoveCourse = (courseCode) => {
+    setFormData(prevState => ({
+      ...prevState,
+      selectedCourses: prevState.selectedCourses.filter(code => code !== courseCode),
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+     // Check if any required fields are empty
+  if (Object.values(formData).some((value) => value === '' && value !== formData.altMobileNumber)) {
+    alert('Please fill in all required fields before submitting.');
+    return;
+  }
+  
     try {
-      await axios.post('http://localhost:3000/addInstitute', formData);
+      // Add institute details
+      const instituteResponse = await axios.post('http://localhost:3000/addInstitute', formData);
       alert('Institute details added successfully!');
+  
+      // Reset the form data
       setFormData({
         ...formData,
         instituteCode: lastMobcode + 1,
+        selectedCourses: [], // Reset selected courses
       });
     } catch (error) {
       console.error('Error adding institute details:', error);
       alert('Failed to add institute details. Please try again.');
     }
   };
-
+  
   useEffect(() => {
     const fetchLastMobcode = async () => {
       try {
@@ -86,6 +114,19 @@ const InstituteForm = () => {
     };
 
     fetchLastMobcode();
+  }, []);
+  
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get('/api/courses');
+        setCourses(response.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
+
+    fetchCourses();
   }, []);
 
   useEffect(() => {
@@ -129,93 +170,90 @@ const InstituteForm = () => {
                 readOnly
               />
             </div>
-          
-          
 
-          <div className="input-box">
-            <label htmlFor="ownerName">Owner Name</label>
-            <input
-              type="text"
-              id="ownerName"
-              name="ownerName"
-              value={formData.ownerName}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <div className="input-box">
-            <label htmlFor="organisationName">Organisation Name</label>
-            <input
-              type="text"
-              id="organisationName"
-              name="organisationName"
-              value={formData.organisationName}
-              onChange={handleChange}
-            />
+            <div className="input-box">
+              <label htmlFor="ownerName">Owner Name</label>
+              <input
+                type="text"
+                id="ownerName"
+                name="ownerName"
+                value={formData.ownerName}
+                onChange={handleChange}
+              />
+            </div>
           </div>
 
-          <div className="input-box">
-            <label htmlFor="mobileNumber">Mobile Number</label>
-            <input
-              type="text"
-              id="mobileNumber"
-              name="mobileNumber"
-              value={formData.mobileNumber}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
+          <div className="form-group">
+            <div className="input-box">
+              <label htmlFor="organisationName">Organisation Name</label>
+              <input
+                type="text"
+                id="organisationName"
+                name="organisationName"
+                value={formData.organisationName}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="form-group">
-          <div className="input-box">
-            <label htmlFor="altMobileNumber">Alternative Mobile Number</label>
-            <input
-              type="text"
-              id="altMobileNumber"
-              name="altMobileNumber"
-              value={formData.altMobileNumber}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="input-box">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div className="column">
-          <div className="input-box">
-            <label htmlFor="address">Address</label>
-            <input
-              type="text"
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-            />
+            <div className="input-box">
+              <label htmlFor="mobileNumber">Mobile Number</label>
+              <input
+                type="text"
+                id="mobileNumber"
+                name="mobileNumber"
+                value={formData.mobileNumber}
+                onChange={handleChange}
+              />
+            </div>
           </div>
 
-          <div className="input-box">
-            <label htmlFor="postOffice">Post Office</label>
-            <input
-              type="text"
-              id="postOffice"
-              name="postOffice"
-              value={formData.postOffice}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
+          <div className="form-group">
+            <div className="input-box">
+              <label htmlFor="altMobileNumber">Alternative Mobile Number</label>
+              <input
+                type="text"
+                id="altMobileNumber"
+                name="altMobileNumber"
+                value={formData.altMobileNumber}
+                onChange={handleChange}
+              />
+            </div>
 
+            <div className="input-box">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="column">
+            <div className="input-box">
+              <label htmlFor="address">Address</label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-box">
+              <label htmlFor="postOffice">Post Office</label>
+              <input
+                type="text"
+                id="postOffice"
+                name="postOffice"
+                value={formData.postOffice}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
 
           <div className="input-box">
             <label htmlFor="policeStation">Police Station</label>
@@ -227,6 +265,7 @@ const InstituteForm = () => {
               onChange={handleChange}
             />
           </div>
+
           <div className="input-box">
             <label htmlFor="district">Select District:</label>
             <select
@@ -247,25 +286,57 @@ const InstituteForm = () => {
             </select>
           </div>
 
-        <div className="form-group">
-          <div className="input-box">
-            <label htmlFor="pinCode">Pin code</label>
-            <input
-              type="text"
-              id="pinCode"
-              name="pinCode"
-              value={formData.pinCode}
-              onChange={handleChange}
-            />
+          <div className="form-group">
+            <div className="input-box">
+              <label htmlFor="pinCode">Pin code</label>
+              <input
+                type="text"
+                id="pinCode"
+                name="pinCode"
+                value={formData.pinCode}
+                onChange={handleChange}
+              />
+            </div>
           </div>
-        </div>
 
-        <button type="submit" onClick={handleSubmit}>
-  Add Institute
-</button>
+          <div className="form-group">
+            <div className="input-box">
+              <label htmlFor="selectedCourse">Select Course:</label>
+              <select
+                id="selectedCourse"
+                name="selectedCourse"
+                onChange={handleCourseSelect}
+                value={''} // Reset the value to prevent pre-selection
+                multiple
+              >
+                {courses.map(course => (
+                  <option key={course.course_code} value={course.course_code}>
+                    {`${course.course_name} - ${course.course_code}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-      </form>
-    </div>
+
+<div>
+  <h4>Selected Courses:</h4>
+  <ul className="selected-courses">
+    {[...formData.selectedCourses].map(courseCode => {
+      const selectedCourse = courses.find(course => course.course_code === courseCode);
+      return (
+        <li key={courseCode}>
+          <span>{`${selectedCourse.course_name} - ${selectedCourse.course_code}`}</span>
+          <button onClick={() => handleRemoveCourse(courseCode)}>X</button>
+        </li>
+      );
+    })}
+  </ul>
+</div>
+
+          <button type="submit">Add Institute</button>
+        </form>
+      </div>
     </div>
   );
 };

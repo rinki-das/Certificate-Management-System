@@ -149,24 +149,24 @@ const BatchCodeForm = () => {
 
   const handleSubmit = async () => {
     try {
-      // Validate that start and end dates are selected
-      if (!startDate || !endDate) {
-        toast.error('Please select both start and end dates.');
+      // Validate that start, end dates, and exam date are selected
+      if (!startDate || !endDate || !examDate) {
+        toast.error('Please select both start, end dates, and exam date.');
         return;
       }
-
+  
       // Check if a file is selected
       if (!file) {
         toast.error('Please select a file.');
         return;
       }
-
+  
       setSubmitting(true);
-
+  
       // Parse course_code from the selected course
       const selectedCourseParts = selectedCourse.split(' - ');
       const course_code = selectedCourseParts[selectedCourseParts.length - 1];
-
+  
       const formData = new FormData();
       formData.append('excelFile', file);
       formData.append('mobcode', selectedInstitute.split(' - ')[1]);
@@ -176,14 +176,15 @@ const BatchCodeForm = () => {
       formData.append('endDate', endDate);
       formData.append('course_code', course_code); // Add course_code to form data
       formData.append('courseName', courseName); // Add courseName to form data
-
+      formData.append('examDate', examDate); // Add examDate to form data
+  
       // Send data to the student_details collection
       const response = await axios.post('/upload-excel', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
       // Display success toast message with the selected batch code
       toast.success(response.data.message);
     } catch (error) {
@@ -193,10 +194,10 @@ const BatchCodeForm = () => {
       setSubmitting(false);
     }
   };
+  
 
  
   
-
   const handleGenerateReport = async () => {
     try {
       // Fetch student details based on selected batch code
@@ -280,8 +281,6 @@ const BatchCodeForm = () => {
         didDrawPage: addPageIfNeeded, // Check if a new page is needed after drawing each page
       });
   
-
-  
       // Use a smaller font size for the subtitle
       pdf.setFontSize(10);
       pdf.text(subTitle, subTitleX, subTitleY);
@@ -303,18 +302,31 @@ const BatchCodeForm = () => {
         pdf.autoTable.previous.finalY + 10
       );
   
-      // Add one more text line
-      pdf.text('Grade: A+ (90% & above)  A (80%-89%)  B+ (70%-79%) B (60%-69%)  C+ (50%-59%)  C (40%-49%)  Fail (Less than 40%)', 10, pdf.autoTable.previous.finalY + 15);
-      pdf.text('Prepared by                      Checked & verified by Course Coordinator                      Exam Dept. Verification                       Executive Director', 10, pdf.autoTable.previous.finalY + 40);
+      // Add one more text line with a gap
+      pdf.text(
+        'Grade: A+ (90% & above)  A (80%-89%)  B+ (70%-79%) B (60%-69%)  C+ (50%-59%)  C (40%-49%)  Fail (Less than 40%)',
+        10,
+        pdf.autoTable.previous.finalY + 15
+      );
+  
+      // Add an empty line for gap
+      pdf.text('', 10, pdf.autoTable.previous.finalY + 20);
+  
+      // Add the next line
+      pdf.text(
+        'Prepared by                      Checked & verified by Course Coordinator                      Exam Dept. Verification                       Executive Director',
+        10,
+        pdf.autoTable.previous.finalY + 30
+      );
   
       // Save the PDF or open it in a new window
       pdf.save(`report_${selectedBatchCode}.pdf`);
-  
     } catch (error) {
       console.error('Error generating report:', error);
       toast.error('Error generating report. Please try again.');
     }
   };
+  
   // Function to handle exam date change
 const handleExamDateChange = (value) => {
   setExamDate(value);

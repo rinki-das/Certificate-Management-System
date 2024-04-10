@@ -130,7 +130,7 @@ const PrintCert = () => {
         percentageMarks: student.percent_of_marks,
         certificateNumber: student.certificate_no,
         // Additional details
-        aadhaarNo: student.aadhaar, // Use aadhar field for Aadhaar number
+        aadhaarNo: student.aadhar, // Use aadhar field for Aadhaar number
         fatherName: student.father_name,
         motherName: student.mother_name,
         // Add any other additional details you want to fetch
@@ -152,18 +152,21 @@ const PrintCert = () => {
   const handlePrintCertificate = async (student) => {
     const monthYear = getFormattedDate(student.startDate);
     const certificateContent = `
-      <div style="font-family: Arial, sans-serif; margin-top: 30px;">
-        <h2 style="text-align: center;">Computer Education Programme</h2>
-        <h3 style="text-align: center;">Certificate</h3>
-        <div style="margin-bottom: 20px;">
-          <p><strong>Aadhaar No. :</strong> ${student.aadhaarNo}</p>
-          <p><strong>Name :</strong> ${student.studentName}</p>
-          <p><strong>Father's Name :</strong> ${student.fatherName}</p>
-          <p><strong>Mother's Name :</strong> ${student.motherName}</p>
-          <p><strong>Institute Name :</strong> ${selectedInstitute}</p>
-          <p><strong>Course Start Date :</strong> ${student.startDate}</p>
-          <p><strong>Course End Date :</strong> ${student.endDate}</p>
-        </div>
+    <div style="font-family: Arial, sans-serif; margin-top: 30px;">
+    <p style="font-size: 0.5em; margin-right: -50px; margin-bottom: 15px;"><strong>Certificate No:</strong> NIELIT/KOL/EX-CR/CCWD/1111020230701/001</p>
+    <h2 style="text-align: center; margin-top: 0; margin-bottom: 5px;">Computer Education Programme</h2>
+    <h3 style="text-align: center; margin-top: 0; margin-bottom: 5px;">Certificate</h3>
+    <div style="margin-bottom: 20px;">
+      <p><strong>Aadhaar No. :</strong> ${student.aadhaarNo}</p>
+      <p><strong>Name :</strong> ${student.studentName}</p>
+      <p><strong>Father's Name :</strong> ${student.fatherName}</p>
+      <p><strong>Mother's Name :</strong> ${student.motherName}</p>
+      <p><strong>Institute Name :</strong> ${selectedInstitute}</p>
+      <p><strong>Course Start Date :</strong> ${student.startDate}</p>
+      <p><strong>Course End Date :</strong> ${student.endDate}</p>
+    </div>
+  </div>
+  
         <p style="text-align: center;">This is to certify that the above-mentioned candidate has successfully passed</p>
         <p style="text-align: center;"><strong>${student.courseName}</strong></p>
         <p style="text-align: center;">____________________________________________________________________________</p>

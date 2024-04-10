@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios'; // Import axios
 
-const TablePrint = ({ studentDetails, onSave, onSendNotification }) => {
+const TablePrint = ({ studentDetails, courseCode, examDate, onSave, onSendNotification }) => {
   const [saving, setSaving] = useState(false);
 
  
@@ -143,23 +143,96 @@ const TablePrint = ({ studentDetails, onSave, onSendNotification }) => {
       toast.error('No data to export.');
       return;
     }
-
+  
+    const courseDetails = {
+      courseName: studentDetails[0].courseName,
+      startDate: studentDetails[0].startDate,
+      endDate: studentDetails[0].endDate,
+      courseCode: studentDetails[0].courseCode,
+    };
+  
     const doc = new jsPDF({
-      orientation: 'landscape',
+      orientation: 'landscape', // Set PDF orientation to landscape
     });
-
+  
+    // Add logos, title, and subtitle
+    const logosWidth = 30;
+    const logosHeight = 30;
+    const logosX = 10;
+    const logosY = 15;
+    doc.addImage(
+      'https://pbs.twimg.com/profile_images/882321654499516416/TbHUUffy_400x400.jpg',
+      'JPEG',
+      logosX,
+      logosY,
+      logosWidth,
+      logosHeight
+    );
+    const title = 'National Institute Of Electronics & Information Technology (NIELIT) Kolkata';
+    const titleX = logosX + logosWidth + 10;
+    const titleY = logosY + 5; // Adjust the vertical position based on your layout
+    doc.setFontSize(12);
+    doc.text(title, titleX, titleY);
+    const subTitle = `JU Campus, Kolkata-700032\nCourse: ${courseDetails.courseName}                    Start Date: ${courseDetails.startDate}\nEnd Date: ${courseDetails.endDate}                    Course Code: ${courseDetails.courseCode}                Exam Date: ${courseDetails.examDate}`;
+    const subTitleX = titleX;
+    const subTitleY = titleY + 10;
+    doc.text(subTitle, subTitleX, subTitleY);
+  
+    // Filter out the 'action' column from the export
     const filteredColumns = columns.filter((col) => col.accessorKey !== 'action');
     const tableData = studentDetails.map((row) => filteredColumns.map((col) => row[col.accessorKey]));
     const tableHeaders = filteredColumns.map((col) => col.header);
-
+  
+    let startY = subTitleY + 20; // Start Y position after the subtitle
+  
+    let totalStudentsPresent = studentDetails.length;
+    let totalStudentsAbsent = 0;
+    let totalStudentsFailed = 0;
+    let totalStudentsDiscontinued = 0;
+  
+    // Count the number of students with different statuses
+    for (const student of studentDetails) {
+      if (student.grade === 'Absent') {
+        totalStudentsAbsent++;
+      } else if (student.grade === 'Failed' || (parseInt(student.marksProject) < 15 && parseInt(student.grade) < 5)) {
+        totalStudentsFailed++;
+      } else if (student.marksProject === '' && student.grade === '') {
+        totalStudentsDiscontinued++;
+      }
+    }
+  
+    // Add table
     autoTable(doc, {
       head: [tableHeaders],
-      body: tableData,
+      body: tableData.slice(0, 15), // Show only first 15 students
+      startY,
     });
-
-    doc.save('student-details.pdf');
+  
+    // Calculate remaining space on the page after adding the table
+    const remainingSpace = doc.internal.pageSize.height - (doc.lastAutoTable.finalY + 10);
+  
+    // Add the totals and additional content if there's enough space
+    if (remainingSpace >= 100) { // Adjust the value according to your content height
+      const totalContent = `Total: ${totalStudentsPresent} Present: ${totalStudentsPresent - totalStudentsAbsent} Absent: ${totalStudentsAbsent} Fail: ${totalStudentsFailed} Discontinued: ${totalStudentsDiscontinued}`;
+      const gradeContent = `Grade: A+ (90% & above) A (80%-89%) B+ (70%-79%) B (60%-69%) C+ (50%-59%) C (40%-49%) Fail (Less than 40%)`;
+      const additionalContent = `
+        Prepared by                      Checked & verified by Course Coordinator                      Exam Dept. Verification                       Executive Director
+      `;
+  
+      doc.text(totalContent, 10, doc.lastAutoTable.finalY + 10);
+      doc.text(gradeContent, 10, doc.lastAutoTable.finalY + 20);
+      doc.text('', 10, doc.lastAutoTable.finalY + 30); // Add blank line for space
+      doc.text(additionalContent, 10, doc.lastAutoTable.finalY + 40);
+    } else {
+      // If there's not enough space, add a new page
+      doc.addPage();
+    }
+  
+    // Save the PDF with student name as the filename
+    const studentName = studentDetails[0].studentName; // Assuming the first student's name is used
+    doc.save(`${studentName}.pdf`);
   };
-
+  
   return (
     <>
       <Box
