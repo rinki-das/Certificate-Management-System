@@ -5,6 +5,23 @@ Download the node modules for the full project
 with command: npm install
 
 
+See the Website live here:
+https://rincert.netlify.app
+
+
+run the website independently 
+for Client Side:
+cd my-react-app
+npm start
+
+for Server side:
+cd Server
+npm start
+
+
+
+
+
 
 ![image](https://github.com/rinki-das/Certificate-Management-System/assets/101658911/ab6de141-137f-4561-a35a-aca8f821f0c3)
 ![image](https://github.com/rinki-das/Certificate-Management-System/assets/101658911/be12895e-c6c0-4fd8-93da-51e74c74827c)
