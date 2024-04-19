@@ -19,12 +19,15 @@
     "react-toastify": "^10.0.4"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "eslint-plugin-react": "^7.34.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "concurrently \"npm start --prefix my-react-app\" \"npm start --prefix Server\"",
+    "start-react": "react-scripts start",
+    "build-react": "react-scripts build",
+    "test-react": "react-scripts test",
+    "eject-react": "react-scripts eject"
   }
+  
 }

@@ -4,13 +4,13 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3001;
 const multer = require('multer');
-const mongoURL = 'mongodb://127.0.0.1:27017';
+const mongoURL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017';
 const dbName = 'NIELIT';
 const path = require('path');
 const xlsx = require('xlsx');
-
+require('dotenv').config();
 app.use(cors());
 app.use(express.json());
 
